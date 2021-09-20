@@ -1,0 +1,43 @@
+.card {
+    max-width: 600px;
+    margin: 0px auto 20px;
+    position: relative;
+}
+
+.cardHeader {
+    padding: "10px 10px 10px 20px";
+    transition: padding 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.status {
+    position: absolute;
+    height: 100%;
+    overflow: hidden;
+    width: 10px;
+    border-right: 1px solid #CCC;
+    transition: width 0.3s ease-in-out;
+}
+.card:hover .cardHeader {
+    padding-left: 50px;
+}
+.card:hover .status {
+    width: 40px;
+}
+
+.status.late { background: #f05214 }
+.status.unfinished { background: #D9F3F4 }
+.status.done { background: #3b6fd1 }
+
+.checkDone {
+    margin-top: 7px;
+}
+
+.eventIcon {
+    margin-top: -1px;
+    float: left;
+}
+.eventIcon:not(.alwaysShow){ display: none; }
+.card:hover .eventIcon { display: block; }
+
+.addDueDate { display: none; }
+.card:hover .addDueDate { display: block; }

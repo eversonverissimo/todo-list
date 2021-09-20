@@ -1,0 +1,26 @@
+.card {
+    max-width: 600px;
+    margin: 0px auto 20px;
+    position: relative;
+}
+
+.textInput {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.dateInput {
+    margin-bottom: 15px;
+}
+
+.statusCheck {
+    float: right;
+}
+.statusLabel {
+    margin-top: 10px;
+    float: right;   
+}
+
+.saveBtn {
+    display: block;
+}

@@ -1,0 +1,11 @@
+.card {
+    max-width: 600px;
+    margin: 0px auto 20px;
+    position: relative;
+}
+
+.textInput {
+    width: calc(100% - 60px);
+    margin-right: 20px;
+    margin-top: -10px;
+}
