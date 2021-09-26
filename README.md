@@ -18,14 +18,12 @@ The architecture is as follows:
 
 ### /components
 It contains the main components of the project, including a *PageWrapper*, that adds a header, a footer and some tags. The hierarchy is as follows:
-1. Home Page: 
+**Home Page:** 
 ```
 {
     Page Wrapper: {
         ToDoList: {
-            ToDoItemAddCard: {
-
-            },
+            ToDoItemAddCard,
             ToDoItemCard: {
                 ToDoItemCardHeader
             }
@@ -34,7 +32,7 @@ It contains the main components of the project, including a *PageWrapper*, that 
 }
 ```
 
-2. Edit Page: 
+**Edit Page:**
 ```
 {
     Page Wrapper: {
@@ -44,11 +42,11 @@ It contains the main components of the project, including a *PageWrapper*, that 
 ```
 
 ### /pages
-It contains the home page (index.tsx), the edit page (/item/[id].tsx) and the API to call the server services. The API REST services are:
-* GET /api/items: list all items
-* GET /api/item?id=[id]: get item with id informed on the query
-* POST /api/item/save: it adds or updates an item (it creates a new file, or updates it, on /database)
-* DELETE /api/item/delete: it removes an item (it removes the corresponding file from /database)
+It contains the home page (*index.tsx*), the edit page (*/item/[id].tsx*) and the API to call the server services. The API REST services are:
+* **GET /api/items:** list all items
+* **GET /api/item?id=[id]:** get item with id informed on the query
+* **POST /api/item/save:** it adds or updates an item (it creates a new file, or updates it, on /database)
+* **DELETE /api/item/delete?id=[id]:** it removes an item (it removes the corresponding file from /database)
 
 ### /server
 It's where the *fs* is called on the server. These methods are invoked by /api/* or by *getServerSideProps* functions.
@@ -58,7 +56,7 @@ It only contains the global css. The component styles are inside their correspon
 
 ### /utils
 It has some useful files, such as:
-* contexts: it contains the context used throughout the components (ToDoListContext), to share the list of items and their functions across the hierarchy of components.
-* enums: where the Status enum is defined
-* helper: it should contain helpful functions to be used for several components (there is only the isLate function for now)
-* services: it's where the client side calls the API to the server side.
+* **contexts:** it contains the context used throughout the components (ToDoListContext), to share the list of items and its functions across the hierarchy of components.
+* **enums:** where the Status enum is defined
+* **helper:** it should contain helpful functions to be used for several components (there is only the *isLate* function for now)
+* **services:** it's where the client side calls the API to the server side.
