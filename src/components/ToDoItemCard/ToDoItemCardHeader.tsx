@@ -1,22 +1,18 @@
-import styles from "./ToDoItemCard.module.css"
+import { useContext } from "react";
+import Router from 'next/router';
 import moment from "moment"
-import { Button, CardHeader, IconButton, Typography } from "@mui/material";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { ToDoItemType } from ".";
-import Router from 'next/router'
 import EventIcon from '@material-ui/icons/Event';
+import { CardHeader, IconButton, Typography } from "@mui/material";
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateTimePicker from '@mui/lab/DateTimePicker';
-import TextField from '@mui/material/TextField';
+import { ToDoListContext } from "@utils/contexts";
+import { ToDoItemType } from ".";
+import styles from "./ToDoItemCard.module.css"
 
-type headerPropsType = {
-    item: ToDoItemType,
-    onDeleteItem: () => void
-}
-
-export default function ToDoItemCardHeader({item, onDeleteItem}:headerPropsType) {
+export default function ToDoItemCardHeader(item:ToDoItemType) {
+    const {deleteItem} = useContext(ToDoListContext);
     const redirect = () => {
         Router.push(`/item/${item.id}`);
     }
@@ -27,7 +23,7 @@ export default function ToDoItemCardHeader({item, onDeleteItem}:headerPropsType)
                 className={styles.cardHeader}
                 action={
                     <>
-                        <IconButton onClick={onDeleteItem}>
+                        <IconButton onClick={() => deleteItem(item.id)}>
                             <DeleteIcon fontSize="small"/>
                         </IconButton>
                         <IconButton onClick={redirect}>

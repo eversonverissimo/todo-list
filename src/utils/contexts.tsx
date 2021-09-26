@@ -6,5 +6,6 @@ export const ToDoListContext = React.createContext({
     items: items,
     updateItemList: (list:ToDoItemType[]) => {},
     deleteItem: (idx:number) => {},
-    addItem: (content:string) => {}
+    addItem: (content:string) => {},
+    saveItem: (item:ToDoItemType) => {}
 });

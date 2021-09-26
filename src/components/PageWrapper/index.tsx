@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import styles from './PageWrapper.module.css'
 import { ReactNode } from 'react';
+import Head from 'next/head';
+import styles from './PageWrapper.module.css';
 
 type PageItem = {
     title: string

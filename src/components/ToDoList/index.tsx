@@ -1,9 +1,9 @@
-import ToDoItemCard, { ToDoItemType } from "@components/ToDoItemCard";
 import { useContext } from "react";
 import {ToDoListContext} from '@utils/contexts';
 import { SentimentDissatisfied } from "@material-ui/icons";
 import { Typography } from "@mui/material";
 import ToDoItemAddCard from "@components/ToDoItemAddCard";
+import ToDoItemCard, { ToDoItemType } from "@components/ToDoItemCard";
 
 export default function ToDoList() {
     const {items, addItem} = useContext(ToDoListContext);

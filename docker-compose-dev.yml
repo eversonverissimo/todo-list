@@ -11,5 +11,4 @@ services:
     volumes:
       - ./src:/home/node/app
       - ./database:/home/node/db-fs
-    command: >
-      sh -c "npm run build && npm run start"
+    command: npm run dev

@@ -1,23 +1,31 @@
-import { Button, Card, CardContent, Checkbox, Fab, Stack, TextField, Typography } from "@mui/material";
-import styles from "./ToDoItemEditCard.module.css"
 import React, { useState } from "react";
 import Link from "next/link"
-import { ToDoItemType } from "@components/ToDoItemCard";
+import { useRouter } from 'next/router';
 import Status from "@utils/enums";
 import { isLate } from "@utils/helper";
+import { saveItem } from "@utils/services";
+import { ToDoItemType } from "@components/ToDoItemCard";
+import moment, { Moment } from "moment";
 import AdapterMoment from '@mui/lab/AdapterMoment';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { Moment } from "moment";
+import { LocalizationProvider, DesktopDatePicker} from '@mui/lab';
+import { Button, Card, CardContent, Checkbox, Stack, TextField, Typography } from "@mui/material";
+import styles from "./ToDoItemEditCard.module.css"
+
+const HOME_URL = '/';
 
 export default function ToDoItemEditCard(item:ToDoItemType) {
 
+    const router = useRouter();
     const [content, setContent] = useState(item.content);
-    const [dueDate, setDueDate] = useState(item.dueDate);
+    const [dueDate, setDueDate] = useState(item.dueDate || null);
     const [status, setStatus] = useState(item.status);
 
     const onEdit = () => {
-
+        saveItem({...item, content: content, dueDate: dueDate, status: status}).then(()=>{
+        router.push(HOME_URL);
+        }).catch(err=>{
+            console.log("An error occurred when trying to edit the item", err);
+        });
     }
 
     const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +39,10 @@ export default function ToDoItemEditCard(item:ToDoItemType) {
     }
 
     const handleCalendarChange = (date:(Moment | null)) => {
-        date && setDueDate(date.format('MM/DD/YYYY'))
+        setDueDate(date ? date.format('MM/DD/YYYY') : null);
+        if (status != Status.DONE){
+            setStatus(date && isLate(date.format('MM/DD/YYYY')) ? Status.LATE : Status.UNFINISHED);
+        }
     };
 
     const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +63,7 @@ export default function ToDoItemEditCard(item:ToDoItemType) {
             <Card className={styles.card}>
                 <CardContent>
                     <TextField
+                        required={true}
                         onKeyDown={handleEnterPress}
                         value={content} onChange={handleTextChange}
                         className={styles.textInput} id="standard-basic" label="Content" variant="standard" />
@@ -59,9 +71,10 @@ export default function ToDoItemEditCard(item:ToDoItemType) {
                     <DesktopDatePicker
                         label="Due Date"
                         inputFormat="MM/DD/yyyy"
-                        value={dueDate}
+                        value={dueDate ? moment(dueDate) : null}
                         onChange={handleCalendarChange}
-                        renderInput={(params) => <TextField {...params} className={styles.dateInput} variant="standard" />}
+                        renderInput={(params) => 
+                            <TextField {...params} className={styles.dateInput} required={false} variant="standard" />}
                     />
 
                     <Checkbox checked={status == Status.DONE} className={styles.statusCheck} 
@@ -75,7 +88,7 @@ export default function ToDoItemEditCard(item:ToDoItemType) {
                         </Button>
                         <Button className={styles.saveBtn}
                             variant="outlined" disabled={!content}>
-                            <Link href='/'>Cancel</Link>
+                            <Link href={HOME_URL}>Cancel</Link>
                         </Button>
                     </Stack>
                 </CardContent>

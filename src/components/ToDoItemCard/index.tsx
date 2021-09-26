@@ -1,15 +1,15 @@
-import styles from "./ToDoItemCard.module.css"
-import { Card, IconButton } from "@mui/material";
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@material-ui/icons";
 import { useState, useContext } from "react";
-import ToDoItemCardHeader from "./ToDoItemCardHeader";
 import Status from "@utils/enums";
 import { ToDoListContext } from "@utils/contexts";
 import { isLate } from "@utils/helper";
+import { Card, IconButton } from "@mui/material";
+import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@material-ui/icons";
+import ToDoItemCardHeader from "./ToDoItemCardHeader";
+import styles from "./ToDoItemCard.module.css";
 
 export type ToDoItemType = {
     content: string,
-    dueDate?: string,
+    dueDate?: string | null,
     status: Status,
     id: number
 }
@@ -17,14 +17,16 @@ export type ToDoItemType = {
 export default function ToDoItemCard(item:ToDoItemType) {
 
     const [curItem, setCurItem] = useState(item);
-    const {deleteItem} = useContext(ToDoListContext);
+    const {saveItem} = useContext(ToDoListContext);
 
     const onStatusChange = () => {
-        setCurItem({
+        const item = {
             ...curItem,
             status: curItem.status == Status.DONE ? 
                 (isLate(curItem.dueDate) ? Status.LATE : Status.UNFINISHED) : Status.DONE
-        });
+        };
+        setCurItem(item);
+        saveItem(item);
     }
     
     return (
@@ -36,7 +38,7 @@ export default function ToDoItemCard(item:ToDoItemType) {
                     }
                 </IconButton>
             </div>
-            <ToDoItemCardHeader item={curItem} onDeleteItem={() => deleteItem(curItem.id)} />
+            <ToDoItemCardHeader {...curItem} />
         </Card>
     );
 }

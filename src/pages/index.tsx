@@ -1,47 +1,52 @@
-import {useState} from 'react'
+import { useState, useEffect } from 'react';
+import { InferGetServerSidePropsType } from 'next';
+import { ToDoListContext } from '@utils/contexts'
+import Status from "@utils/enums";
+import { deleteItem, getItems, saveItem } from '@utils/services';
+import { ToDoItemType } from "@components/ToDoItemCard";
 import PageWrapper from '@components/PageWrapper'
 import ToDoList from '@components/ToDoList'
-import {ToDoListContext} from '@utils/contexts'
-import Status from "@utils/enums";
-import { ToDoItemType } from "@components/ToDoItemCard";
-import { InferGetStaticPropsType } from 'next';
+import ServerAPI from '@server/ServerAPI';
 
-export default function Home(props:InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home(props:InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   const [items, setItems] = useState<ToDoItemType[] | []>(props.items);
 
-  const deleteItem = (idx:number) => {
-    const temp = [...items];
-    temp.splice(idx, 1);
-    setItems(temp);
+  const deleteItemFromList = (id:number) => {
+
+    const idx = items.findIndex(item => item.id == id);
+    if (idx >= 0){
+      const curItem = items[idx];
+      const temp = [...items];
+      temp.splice(idx, 1);
+      setItems(temp);
+      deleteItem(curItem.id);
+    }
   }
 
-  const addItem = (content:string) => {
-    const maxId = Math.max.apply(Math, items.map(function(o) { return o.id; }))
+  const addItemToList = (content:string) => {
+    const newId =items && items.length > 0 ? (Math.max.apply(Math, items.map(function(o) { return o.id; })) || 0) + 1 : 1;
+    const newItem:ToDoItemType = {content: content, id: newId, status: Status.UNFINISHED};
+    saveItem(newItem);
 
     setItems([...items,
-      {content: content, status: Status.UNFINISHED, id: maxId+1}
+      {content: content, status: Status.UNFINISHED, id: newId}
     ]);
   }
 
   return (
     <PageWrapper title="Your To Do items" description="A list of to do items">
       <ToDoListContext.Provider
-        value={{items: items, updateItemList: setItems, deleteItem: deleteItem, addItem: addItem}}>
+        value={{items: items, updateItemList: setItems, deleteItem: deleteItemFromList, addItem: addItemToList, saveItem: saveItem}}>
         <ToDoList />
       </ToDoListContext.Provider>
     </PageWrapper>
   )
 }
 
-export const getStaticProps = async() => {
+export const getServerSideProps = async() => {
 
-  const items:ToDoItemType[] = [
-    { content: "Unfinished On Time", dueDate: "10/20/2021", status: Status.UNFINISHED, id: 1},
-    { content: "Unfinished No Date", status: Status.UNFINISHED, id: 2},
-    { content: "Unfinished Late", dueDate: "08/12/2021", status: Status.LATE, id: 3},
-    { content: "Done", dueDate: "09/05/2021", status: Status.DONE, id: 4},
-  ];
+  const items:ToDoItemType[] = await ServerAPI.getItems() as ToDoItemType[];
 
   return {
     props: {
