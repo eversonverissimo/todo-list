@@ -1,7 +1,7 @@
 # To Do List
 This module allows you to easily add to-do items for you to track your activities, including setting up a due date and marking the activity as done.
 
-## How to run this project
+## How to start the application
 This was built in docker, set up in a docker compose file. It contains two volumes linked inside the project:
 1. database: not tracked in git; it's where your items are physically saved.
 2. src: the code itself
